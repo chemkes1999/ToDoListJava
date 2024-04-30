@@ -3,8 +3,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Main extends JFrame {
     private final DefaultListModel<String> tasksModel = new DefaultListModel<>();
@@ -29,6 +31,7 @@ public class Main extends JFrame {
         inputPanel.add(dateSpinner);
         inputPanel.add(timeSpinner);
         inputPanel.add(createButton("Agregar", this::addTask));
+        inputPanel.add(createButton("Editar", this::editTask)); // Botón para editar tarea
 
         add(inputPanel, BorderLayout.NORTH);
         add(new JScrollPane(taskDisplay), BorderLayout.CENTER);
@@ -60,6 +63,63 @@ public class Main extends JFrame {
         } else {
             JOptionPane.showMessageDialog(this, "Favor de ingresar la tarea", "Error", JOptionPane.WARNING_MESSAGE);
         }
+    }
+
+    private void editTask(ActionEvent e) {
+        int selectedIndex = taskDisplay.getSelectedIndex();
+        if (selectedIndex >= 0) {
+            String currentTask = tasksModel.getElementAt(selectedIndex);
+            String[] parts = currentTask.split(" - ");
+            String currentTaskText = parts[0];
+            String currentDateTime = parts[1];
+
+            taskInput.setText(currentTaskText);
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+            try {
+                Date currentDate = dateFormat.parse(currentDateTime.substring(0, 10));
+                Date currentTime = timeFormat.parse(currentDateTime.substring(11));
+                dateSpinner.setValue(currentDate);
+                timeSpinner.setValue(new SimpleDateFormat("HH:mm").format(currentTime));
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+            }
+
+            JPanel editPanel = new JPanel(new GridLayout(0, 2));
+            editPanel.add(new JLabel("Tarea:"));
+            editPanel.add(taskInput);
+            editPanel.add(new JLabel("Fecha (dd/MM/yyyy):"));
+            editPanel.add(dateSpinner);
+            editPanel.add(new JLabel("Hora (HH:mm):"));
+            editPanel.add(timeSpinner);
+
+            int result = JOptionPane.showConfirmDialog(this, editPanel, "Editar Tarea", JOptionPane.OK_CANCEL_OPTION);
+            if (result == JOptionPane.OK_OPTION) {
+                String editedTask = taskInput.getText();
+                String editedDate = new SimpleDateFormat("dd/MM/yyyy").format(dateSpinner.getValue());
+                String editedTime = (String) timeSpinner.getValue();
+
+                if (!editedTask.isEmpty() && !editedDate.isEmpty() && !editedTime.isEmpty()) {
+                    String editedDateTime = editedDate + " " + editedTime;
+                    tasksModel.set(selectedIndex, editedTask + " - " + editedDateTime);
+                    saveTasks();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Error", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        }
+    }
+
+
+
+    private String extractDateTime(String task) {
+        // Suponiendo que el formato de la tarea es "TAREA - dd/MM/yyyy HH:mm"
+        String[] parts = task.split(" - ");
+        if (parts.length > 1) {
+            return parts[1]; // La segunda parte es la fecha y hora
+        }
+        return "";
     }
 
     private void deleteTask(ActionEvent e) {
