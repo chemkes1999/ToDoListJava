@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class ToDoListApp extends JFrame {
     private final DefaultListModel<String> tasksModel = new DefaultListModel<>();
