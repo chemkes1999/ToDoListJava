@@ -111,16 +111,16 @@ public class Main extends JFrame {
         }
     }
 
-
-
-    private String extractDateTime(String task) {
-        // Suponiendo que el formato de la tarea es "TAREA - dd/MM/yyyy HH:mm"
-        String[] parts = task.split(" - ");
-        if (parts.length > 1) {
-            return parts[1]; // La segunda parte es la fecha y hora
-        }
-        return "";
-    }
+// ! se comenta esta funcion
+//
+//    private String extractDateTime(String task) {
+//        // Suponiendo que el formato de la tarea es "TAREA - dd/MM/yyyy HH:mm"
+//        String[] parts = task.split(" - ");
+//        if (parts.length > 1) {
+//            return parts[1]; // La segunda parte es la fecha y hora
+//        }
+//        return "";
+//    }
 
     private void deleteTask(ActionEvent e) {
         int selectedIndex = taskDisplay.getSelectedIndex();
