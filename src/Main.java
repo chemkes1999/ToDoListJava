@@ -2,22 +2,25 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
-public class ToDoListApp extends JFrame {
+public class Main extends JFrame {
     private final DefaultListModel<String> tasksModel = new DefaultListModel<>();
     private final JTextField taskInput = new JTextField();
     private final JList<String> taskDisplay = new JList<>(tasksModel);
     private final JSpinner dateSpinner = new JSpinner(new SpinnerDateModel());
     private final JSpinner timeSpinner = new JSpinner(new SpinnerListModel(getHourList()));
+    private final String fileName = "tasks.txt";
 
-    public ToDoListApp() {
+    public Main() {
         setTitle("To-Do List App");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(600, 300);
         setLayout(new BorderLayout());
+
+        loadTasks();
 
         JPanel inputPanel = new JPanel(new GridLayout(1, 4));
         inputPanel.setBackground(new Color(219, 235, 255, 171)); // Amarillo suave
@@ -53,6 +56,7 @@ public class ToDoListApp extends JFrame {
             String dateTime = new SimpleDateFormat("dd/MM/yyyy").format(dateSpinner.getValue()) + " " + timeSpinner.getValue();
             tasksModel.addElement(task + " - " + dateTime);
             taskInput.setText("");
+            saveTasks();
         } else {
             JOptionPane.showMessageDialog(this, "Favor de ingresar la tarea", "Error", JOptionPane.WARNING_MESSAGE);
         }
@@ -62,6 +66,7 @@ public class ToDoListApp extends JFrame {
         int selectedIndex = taskDisplay.getSelectedIndex();
         if (selectedIndex >= 0) {
             tasksModel.remove(selectedIndex);
+            saveTasks();
         }
     }
 
@@ -73,6 +78,27 @@ public class ToDoListApp extends JFrame {
         return hours;
     }
 
+    private void saveTasks() {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
+            for (int i = 0; i < tasksModel.getSize(); i++) {
+                writer.println(tasksModel.getElementAt(i));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadTasks() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                tasksModel.addElement(line);
+            }
+        } catch (IOException e) {
+            // El archivo no existe o no se puede leer, no hacer nada
+        }
+    }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             try {
@@ -80,7 +106,7 @@ public class ToDoListApp extends JFrame {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            new ToDoListApp().setVisible(true);
+            new Main().setVisible(true);
         });
     }
 }
