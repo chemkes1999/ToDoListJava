@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,15 +13,13 @@ public class Main extends JFrame {
     private final JList<String> taskDisplay = new JList<>(tasksModel);
     private final JSpinner dateSpinner = new JSpinner(new SpinnerDateModel());
     private final JSpinner timeSpinner = new JSpinner(new SpinnerListModel(getHourList()));
-    private final String fileName = "tasks.txt";
+    private final TaskManager taskManager = new TaskManager(tasksModel);
 
     public Main() {
         setTitle("To-Do List App");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(600, 300);
         setLayout(new BorderLayout());
-
-        loadTasks();
 
         JPanel inputPanel = new JPanel(new GridLayout(1, 4));
         inputPanel.setBackground(new Color(219, 235, 255, 171)); // Amarillo suave
@@ -59,7 +56,7 @@ public class Main extends JFrame {
             String dateTime = new SimpleDateFormat("dd/MM/yyyy").format(dateSpinner.getValue()) + " " + timeSpinner.getValue();
             tasksModel.addElement(task + " - " + dateTime);
             taskInput.setText("");
-            saveTasks();
+            taskManager.saveTasks();
         } else {
             JOptionPane.showMessageDialog(this, "Favor de ingresar la tarea", "Error", JOptionPane.WARNING_MESSAGE);
         }
@@ -103,7 +100,7 @@ public class Main extends JFrame {
                 if (!editedTask.isEmpty() && !editedDate.isEmpty() && !editedTime.isEmpty()) {
                     String editedDateTime = editedDate + " " + editedTime;
                     tasksModel.set(selectedIndex, editedTask + " - " + editedDateTime);
-                    saveTasks();
+                    taskManager.saveTasks();
                 } else {
                     JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Error", JOptionPane.WARNING_MESSAGE);
                 }
@@ -111,22 +108,11 @@ public class Main extends JFrame {
         }
     }
 
-// ! se comenta esta funcion
-//
-//    private String extractDateTime(String task) {
-//        // Suponiendo que el formato de la tarea es "TAREA - dd/MM/yyyy HH:mm"
-//        String[] parts = task.split(" - ");
-//        if (parts.length > 1) {
-//            return parts[1]; // La segunda parte es la fecha y hora
-//        }
-//        return "";
-//    }
-
     private void deleteTask(ActionEvent e) {
         int selectedIndex = taskDisplay.getSelectedIndex();
         if (selectedIndex >= 0) {
             tasksModel.remove(selectedIndex);
-            saveTasks();
+            taskManager.saveTasks();
         }
     }
 
@@ -136,27 +122,6 @@ public class Main extends JFrame {
             hours.add(String.format("%02d:00", i));
         }
         return hours;
-    }
-
-    private void saveTasks() {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
-            for (int i = 0; i < tasksModel.getSize(); i++) {
-                writer.println(tasksModel.getElementAt(i));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void loadTasks() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                tasksModel.addElement(line);
-            }
-        } catch (IOException e) {
-            // El archivo no existe o no se puede leer, no hacer nada
-        }
     }
 
     public static void main(String[] args) {
