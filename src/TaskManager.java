@@ -1,10 +1,5 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-
-import javax.swing.DefaultListModel;
+import javax.swing.*;
+import java.io.*;
 
 public class TaskManager {
     private final DefaultListModel<String> tasksModel;
