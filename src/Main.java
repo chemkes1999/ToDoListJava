@@ -16,6 +16,7 @@ public class Main extends JFrame {
     private final TaskManager taskManager = new TaskManager(tasksModel);
 
     public Main() {
+    	System.out.print("Iniciando proyecto de todolist");
         setTitle("To-Do List App");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(600, 300);
