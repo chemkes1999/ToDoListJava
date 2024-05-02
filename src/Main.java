@@ -111,9 +111,12 @@ public class Main extends JFrame {
 
     private void deleteTask(ActionEvent e) {
         int selectedIndex = taskDisplay.getSelectedIndex();
+        System.out.println(selectedIndex);
         if (selectedIndex >= 0) {
             tasksModel.remove(selectedIndex);
             taskManager.saveTasks();
+        }else{
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una tarea para eliminar", "Error", JOptionPane.WARNING_MESSAGE);
         }
     }
 
