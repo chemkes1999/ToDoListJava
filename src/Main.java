@@ -54,8 +54,7 @@ public class Main extends JFrame {
     private void addTask(ActionEvent e) {
         String task = taskInput.getText().trim();
         if (!task.isEmpty()) {
-            String dateTime = new SimpleDateFormat("dd/MM/yyyy").format(dateSpinner.getValue()) + " "
-                    + timeSpinner.getValue();
+            String dateTime = new SimpleDateFormat("dd/MM/yyyy").format(dateSpinner.getValue()) + " " + timeSpinner.getValue();
             tasksModel.addElement(task + " - " + dateTime);
             taskInput.setText("");
             taskManager.saveTasks();
@@ -104,8 +103,7 @@ public class Main extends JFrame {
                     tasksModel.set(selectedIndex, editedTask + " - " + editedDateTime);
                     taskManager.saveTasks();
                 } else {
-                    JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Error",
-                            JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Error", JOptionPane.WARNING_MESSAGE);
                 }
             }
         }
@@ -118,8 +116,7 @@ public class Main extends JFrame {
             tasksModel.remove(selectedIndex);
             taskManager.saveTasks();
         } else {
-            JOptionPane.showMessageDialog(this, "Debe seleccionar una tarea para eliminar", "Error",
-                    JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una tarea para eliminar", "Error", JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -135,7 +132,7 @@ public class Main extends JFrame {
         SwingUtilities.invokeLater(() -> {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); // Look and feel del sistema
-                                                                                     // operativo
+                // operativo
             } catch (Exception e) {
                 e.printStackTrace();
             }
