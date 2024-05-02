@@ -16,7 +16,7 @@ public class Main extends JFrame {
     private final TaskManager taskManager = new TaskManager(tasksModel);
 
     public Main() {
-    	System.out.print("Iniciando proyecto de todolist");
+        System.out.print("Iniciando proyecto de todolist");
         setTitle("To-Do List App");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(600, 300);
@@ -54,7 +54,8 @@ public class Main extends JFrame {
     private void addTask(ActionEvent e) {
         String task = taskInput.getText().trim();
         if (!task.isEmpty()) {
-            String dateTime = new SimpleDateFormat("dd/MM/yyyy").format(dateSpinner.getValue()) + " " + timeSpinner.getValue();
+            String dateTime = new SimpleDateFormat("dd/MM/yyyy").format(dateSpinner.getValue()) + " "
+                    + timeSpinner.getValue();
             tasksModel.addElement(task + " - " + dateTime);
             taskInput.setText("");
             taskManager.saveTasks();
@@ -103,7 +104,8 @@ public class Main extends JFrame {
                     tasksModel.set(selectedIndex, editedTask + " - " + editedDateTime);
                     taskManager.saveTasks();
                 } else {
-                    JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Error", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Error",
+                            JOptionPane.WARNING_MESSAGE);
                 }
             }
         }
@@ -115,8 +117,9 @@ public class Main extends JFrame {
         if (selectedIndex >= 0) {
             tasksModel.remove(selectedIndex);
             taskManager.saveTasks();
-        }else{
-            JOptionPane.showMessageDialog(this, "Debe seleccionar una tarea para eliminar", "Error", JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una tarea para eliminar", "Error",
+                    JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -131,7 +134,8 @@ public class Main extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); // Look and feel del sistema operativo
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); // Look and feel del sistema
+                                                                                     // operativo
             } catch (Exception e) {
                 e.printStackTrace();
             }
