@@ -1,7 +1,9 @@
+
 import javax.swing.*;
 import java.io.*;
 
 public class TaskManager {
+
     private final DefaultListModel<String> tasksModel;
     private final String fileName = "tasks.txt";
 
