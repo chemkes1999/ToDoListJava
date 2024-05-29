@@ -1,3 +1,4 @@
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Main extends JFrame {
+
     private final DefaultListModel<String> tasksModel = new DefaultListModel<>();
     private final JTextField taskInput = new JTextField();
     private final JList<String> taskDisplay = new JList<>(tasksModel);
