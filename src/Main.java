@@ -1,12 +1,11 @@
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 
 public class Main extends JFrame {
 
@@ -24,32 +23,35 @@ public class Main extends JFrame {
         setSize(600, 300);
         setLayout(new BorderLayout());
 
-        JPanel inputPanel = new JPanel(new GridLayout(1, 4));
-        inputPanel.setBackground(new Color(219, 235, 255, 171)); // Amarillo suave
+        JPanel inputPanel = new JPanel(new GridLayout(1, 5));
+        inputPanel.setBackground(new Color(219, 235, 255, 171));
         inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         inputPanel.add(taskInput);
         inputPanel.add(dateSpinner);
         inputPanel.add(timeSpinner);
         inputPanel.add(createButton("Agregar", this::addTask));
-        inputPanel.add(createButton("Editar", this::editTask)); // Botón para editar tarea
+        inputPanel.add(createButton("Editar", this::editTask));
 
         add(inputPanel, BorderLayout.NORTH);
         add(new JScrollPane(taskDisplay), BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setBackground(new Color(219, 235, 255, 171)); // Amarillo suave
+        buttonPanel.setBackground(new Color(219, 235, 255, 171));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         buttonPanel.add(createButton("Eliminar tarea", this::deleteTask));
+        buttonPanel.add(createButton("Marcar como Completada", this::markTaskCompleted));
         add(buttonPanel, BorderLayout.SOUTH);
+
+        loadTasks();
     }
 
     private JButton createButton(String text, ActionListener listener) {
         JButton button = new JButton(text);
         button.addActionListener(listener);
-        button.setBackground(new Color(219, 235, 255, 171)); // Naranja brillante
-        button.setForeground(Color.BLACK); // Texto blanco
-        button.setFocusPainted(false); // Eliminar el efecto de foco
-        button.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10)); // Espacio interior
+        button.setBackground(new Color(219, 235, 255, 171));
+        button.setForeground(Color.BLACK);
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         return button;
     }
 
@@ -125,6 +127,18 @@ public class Main extends JFrame {
         }
     }
 
+    private void markTaskCompleted(ActionEvent e) {
+        int selectedIndex = taskDisplay.getSelectedIndex();
+        if (selectedIndex >= 0) {
+            String task = tasksModel.getElementAt(selectedIndex);
+            tasksModel.set(selectedIndex, task + " (Completada)");
+            taskManager.saveTasks();
+        } else {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una tarea para marcar como completada", "Error",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
     private ArrayList<String> getHourList() {
         ArrayList<String> hours = new ArrayList<>();
         for (int i = 0; i < 24; i++) {
@@ -133,15 +147,47 @@ public class Main extends JFrame {
         return hours;
     }
 
+    private void loadTasks() {
+        taskManager.loadTasks();
+    }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); // Look and feel del sistema
-                // operativo
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             } catch (Exception e) {
                 e.printStackTrace();
             }
             new Main().setVisible(true);
         });
+    }
+
+    static class TaskManager {
+        private final DefaultListModel<String> tasksModel;
+
+        public TaskManager(DefaultListModel<String> tasksModel) {
+            this.tasksModel = tasksModel;
+        }
+
+        public void saveTasks() {
+            try (PrintWriter writer = new PrintWriter(new FileWriter("tasks.txt"))) {
+                for (int i = 0; i < tasksModel.size(); i++) {
+                    writer.println(tasksModel.getElementAt(i));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void loadTasks() {
+            try (BufferedReader reader = new BufferedReader(new FileReader("tasks.txt"))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    tasksModel.addElement(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
