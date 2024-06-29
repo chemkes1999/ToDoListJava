@@ -5,7 +5,8 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class Main extends JFrame {
 
@@ -58,8 +59,7 @@ public class Main extends JFrame {
     private void addTask(ActionEvent e) {
         String task = taskInput.getText().trim();
         if (!task.isEmpty()) {
-            String dateTime = new SimpleDateFormat("dd/MM/yyyy").format(dateSpinner.getValue()) + " "
-                    + timeSpinner.getValue();
+            String dateTime = new SimpleDateFormat("dd/MM/yyyy").format(dateSpinner.getValue()) + " " + timeSpinner.getValue();
             tasksModel.addElement(task + " - " + dateTime);
             taskInput.setText("");
             taskManager.saveTasks();
@@ -108,8 +108,7 @@ public class Main extends JFrame {
                     tasksModel.set(selectedIndex, editedTask + " - " + editedDateTime);
                     taskManager.saveTasks();
                 } else {
-                    JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Error",
-                            JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Error", JOptionPane.WARNING_MESSAGE);
                 }
             }
         }
@@ -122,8 +121,7 @@ public class Main extends JFrame {
             tasksModel.remove(selectedIndex);
             taskManager.saveTasks();
         } else {
-            JOptionPane.showMessageDialog(this, "Debe seleccionar una tarea para eliminar", "Error",
-                    JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una tarea para eliminar", "Error", JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -134,8 +132,7 @@ public class Main extends JFrame {
             tasksModel.set(selectedIndex, task + " (Completada)");
             taskManager.saveTasks();
         } else {
-            JOptionPane.showMessageDialog(this, "Debe seleccionar una tarea para marcar como completada", "Error",
-                    JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una tarea para marcar como completada", "Error", JOptionPane.WARNING_MESSAGE);
         }
     }
 
